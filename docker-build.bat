@@ -8,7 +8,7 @@ net session >nul 2>&1
           ECHO Beginning build.
           docker build . -t "reddit-notifier:RNOTIFIER"
           ECHO Docker build complete.
-          docker run -i -d -t reddit-notifier:RNOTIFIER
+          docker run -i -d -t reddit-notifier:RNOTIFIER --name=r-notifier
           GOTO End
  ) else (
           ECHO Error! Run me with admin rights.
