@@ -29,7 +29,9 @@ while True:
         for item in children:
                 d = item.get('data')
                 mins_since_creation, seconds_since_creation = divmod((mktime(time.gmtime()) - d.get('created_utc')), 60)
-                upvotes_per_min = d.get('score') / mins_since_creation
+                print " |||  " + str(mins_since_creation) 
+		upvotes_per_min = d.get('score') / mins_since_creation
+		print upvotes_per_min
                 if upvotes_per_min > config_dict['upvotes_per_min_trigger']:
                         if d.get('url') in content_buffer:
                                 print "Skipping : " + d.get('title')
@@ -39,4 +41,4 @@ while True:
                                                                          from_=config_dict['phone_number_source'],
                                                                          body=(d.get('title') + " ( " + str(d.get('score')) + " | " + str(upvotes_per_min) + " | " + str(d.get('num_comments')) + ")\n\n" +  d.get('url')))
                                 content_buffer.append(str(d.get('url')))
-                                time.sleep(float(config_dict['refresh_every']))
+	time.sleep(float(config_dict['refresh_every']))
