@@ -8,7 +8,7 @@ fi
 
 
 echo "Begining build..."
-echo 	## Optional newline. 
+echo 	## Optional newline.
 docker build . -t "reddit-notifier:RNOTIFIER"
 echo "Docker build complete."
-docker run -i -d -p 6080:80 -t reddit-notifier:RNOTIFIER
+docker run -i -d -t reddit-notifier:RNOTIFIER
