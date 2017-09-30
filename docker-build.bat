@@ -1,6 +1,6 @@
 @echo off
 
-::IF %~dp0 NEQ %cd do cd %~dp0
+SET DOCKER_EXTERNAL_PORT=6080
 cd %~dp0
 
 net session >nul 2>&1
