@@ -1,6 +1,5 @@
 @echo off
 
-SET DOCKER_EXTERNAL_PORT=6080
 cd %~dp0
 
 net session >nul 2>&1
