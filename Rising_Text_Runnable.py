@@ -17,10 +17,16 @@ config_dict = cl._parse()
 while True:
 	client = Client(config_dict['account_sid'], config_dict['auth_token'])
 	page = requests.get("https://www.reddit.com/r/" + config_dict['subreddit_name'] + "/" + config_dict['sort_by'] + ".json?sort=new")
-	print("Response Status: " + str(page.status_code))
+	print("\n\nResponse Status: " + str(page.status_code))
 	print "Last refresh: " + time.strftime('%X')
+	if page.status_code == 429:
+		print("Too many requests sent. Skipping this time.")
+		# TODO verbose logger for compelete headers.
+		time.sleep(float(config_dict['refresh_every']))
+		continue
 	if page.status_code != 200:
-		print("Error parsing page! Skipping this time.")
+		print("Unknown error in page status. Printing header: \n\n\n")
+		print(page.header)
 		time.sleep(float(config_dict['refresh_every']))
 		continue
 
@@ -30,10 +36,8 @@ while True:
 		d = item.get('data')
 		mins_since_creation, seconds_since_creation = divmod((mktime(time.gmtime()) - d.get('created_utc')), 60)
 		upvotes_per_min = d.get('score') / mins_since_creation
-		print " UPVM : " + str(upvotes_per_min)
-		print config_dict['upvotes_per_min_trigger']
 		if upvotes_per_min > float(config_dict['upvotes_per_min_trigger']):
-			if d.get('url') in content_buffer:
+			if str(d.get('url')) in content_buffer:
 				print "Skipping : " + d.get('title')
 			else:
 				print "Sending text for " + d.get('url')
