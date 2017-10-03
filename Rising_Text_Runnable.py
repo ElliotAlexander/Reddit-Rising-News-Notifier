@@ -10,6 +10,8 @@ from bs4 import BeautifulSoup
 from ConfigLoad import config_load
 from twilio.rest import Client
 
+loops_since_text = 0
+LOOP_SINCE_TEXT_UPPER = 5
 content_buffer = list()
 cl = config_load()
 config_dict = cl._parse()
@@ -40,9 +42,12 @@ while True:
 			if str(d.get('url')) in content_buffer:
 				print "Skipping : " + d.get('title')
 			else:
+				loops_since_text = 0
 				print "Sending text for " + d.get('url')
 				message = client.api.account.messages.create(to=config_dict['phone_number_target'],
 															 from_=config_dict['phone_number_source'],
 														 	body=(d.get('title') + " ( " + str(d.get('score')) + " | " + str(upvotes_per_min) + " | " + str(d.get('num_comments')) + ")\n\n" +  d.get('url')))
 				content_buffer.append(str(d.get('url')))
 	time.sleep(float(config_dict['refresh_every']))
+	if loops_since_text > LOOP_SINCE_TEXT_UPPER:
+		del content_buffer[:]
